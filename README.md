@@ -1,4 +1,4 @@
-# Develeopment of a Vision-Based Remote-Control Application for VLC Media Player in Python 
+# Development of a Vision-Based Remote-Control Application for VLC Media Player in Python 
 
 The purpose of the program is the remote control of VLC Media Player using user's gestures 
 
