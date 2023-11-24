@@ -18,7 +18,9 @@ def popupError(errorMessage):
     popupRoot = Tk()
     popupRoot.title(my_vars.windowName)
     popupRoot.after(10000, popupRoot.destroy)
-    popupLabel = Label(popupRoot, text=errorMessage, font=("Verdana", 11), anchor="center")
+    popupLabel = Label(
+        popupRoot, text=errorMessage, font=("Verdana", 11), anchor="center"
+    )
     popupLabel.pack()
     popupRoot.geometry("400x50+800+500")
     popupRoot.mainloop()
@@ -37,7 +39,9 @@ def checkIfVlcIsFocused():
     """
     user32 = ctypes.windll.user32
     active_window_title = ctypes.create_unicode_buffer(1024)
-    user32.GetWindowTextW(user32.GetForegroundWindow(), active_window_title, len(active_window_title))
+    user32.GetWindowTextW(
+        user32.GetForegroundWindow(), active_window_title, len(active_window_title)
+    )
     return "VLC" in active_window_title.value
 
 
@@ -50,11 +54,17 @@ def customLog(logLevel, message):
     """
     logging.basicConfig(format="myLog %(levelname)s: %(message)s", level=logging.INFO)
     if logLevel == logging.INFO:
-        logging.info(my_const.LOG_GREEN_LETTERS_START + str(message) + my_const.LOG_LETTERS_END)
+        logging.info(
+            my_const.LOG_GREEN_LETTERS_START + str(message) + my_const.LOG_LETTERS_END
+        )
     elif logLevel == logging.WARNING:
-        logging.warning(my_const.LOG_YELLOW_LETTERS_START + str(message) + my_const.LOG_LETTERS_END)
+        logging.warning(
+            my_const.LOG_YELLOW_LETTERS_START + str(message) + my_const.LOG_LETTERS_END
+        )
     elif logLevel == logging.ERROR:
-        logging.error(my_const.LOG_RED_LETTERS_START + str(message) + my_const.LOG_LETTERS_END)
+        logging.error(
+            my_const.LOG_RED_LETTERS_START + str(message) + my_const.LOG_LETTERS_END
+        )
 
 
 def detectHandsLandmarks(mpDrawing, mpHands, image, hands):
@@ -68,7 +78,9 @@ def detectHandsLandmarks(mpDrawing, mpHands, image, hands):
                 image=image,
                 landmark_list=hand_landmarks,
                 connections=mpHands.HAND_CONNECTIONS,
-                landmark_drawing_spec=mpDrawing.DrawingSpec(color=(255, 255, 255), thickness=2, circle_radius=2),
+                landmark_drawing_spec=mpDrawing.DrawingSpec(
+                    color=(255, 255, 255), thickness=2, circle_radius=2
+                ),
                 connection_drawing_spec=mpDrawing.DrawingSpec(
                     color=(0, 255, 0),
                     thickness=2,
@@ -109,15 +121,27 @@ def newRecognizeGestures(mpHands, image, results, draw=True, display=True):
         # for each finger tip
         for tipIndex in fingersTipsIds:
             fingerName = tipIndex.name.split("_")[0]
-            if handLandmarks.landmark[tipIndex].y < handLandmarks.landmark[tipIndex - 2].y:
+            if (
+                handLandmarks.landmark[tipIndex].y
+                < handLandmarks.landmark[tipIndex - 2].y
+            ):
                 fingersStatuses[handLabel.upper() + "_" + fingerName] = True
                 count[handLabel.upper()] += 1
-            isFist = all(handLandmarks.landmark[tipIndex].y < handLandmarks.landmark[0].y and handLandmarks.landmark[tipIndex].y > handLandmarks.landmark[tipIndex - 2].y for tipIndex in fingersTipsIds)
+            isFist = all(
+                handLandmarks.landmark[tipIndex].y < handLandmarks.landmark[0].y
+                and handLandmarks.landmark[tipIndex].y
+                > handLandmarks.landmark[tipIndex - 2].y
+                for tipIndex in fingersTipsIds
+            )
         # x-coordinates of the tip and mcp of the thumb
         thumb_tip_x = handLandmarks.landmark[mpHands.HandLandmark.THUMB_TIP].x
         thumb_mcp_x = handLandmarks.landmark[mpHands.HandLandmark.THUMB_TIP - 2].x
         # if the thumb is up
-        if (handLabel.upper() == my_const.RIGHT_STRING and (thumb_tip_x < thumb_mcp_x)) or (handLabel.upper() == my_const.LEFT_STRING and (thumb_tip_x > thumb_mcp_x)):
+        if (
+            handLabel.upper() == my_const.RIGHT_STRING and (thumb_tip_x < thumb_mcp_x)
+        ) or (
+            handLabel.upper() == my_const.LEFT_STRING and (thumb_tip_x > thumb_mcp_x)
+        ):
             # update the status of the thumb in the dictionary to true.
             fingersStatuses[handLabel.upper() + "_THUMB"] = True
             # increase count of the fingers up of the hand by 1.
@@ -125,26 +149,83 @@ def newRecognizeGestures(mpHands, image, results, draw=True, display=True):
 
     if draw:
         # show the total count of the fingers of both hands on the output
-        cv2.putText(image, ("Total Fingers: % s" % str(sum(count.values()))), (5, 25), cv2.FONT_HERSHEY_COMPLEX, my_const.CV2_FONT_SIZE, my_const.GREEN, 2)
+        cv2.putText(
+            image,
+            ("Total Fingers: % s" % str(sum(count.values()))),
+            (5, 25),
+            cv2.FONT_HERSHEY_COMPLEX,
+            my_const.CV2_FONT_SIZE,
+            my_const.GREEN,
+            2,
+        )
         if count[my_const.LEFT_STRING] > 0 and count[my_const.RIGHT_STRING] > 0:
-            cv2.putText(image, ("Hand_label: Left & Right"), (5, 50), cv2.FONT_HERSHEY_COMPLEX, my_const.CV2_FONT_SIZE, my_const.GREEN, 2)
+            cv2.putText(
+                image,
+                ("Hand_label: Left & Right"),
+                (5, 50),
+                cv2.FONT_HERSHEY_COMPLEX,
+                my_const.CV2_FONT_SIZE,
+                my_const.GREEN,
+                2,
+            )
         elif count[my_const.LEFT_STRING] == 0 and count[my_const.RIGHT_STRING] > 0:
-            cv2.putText(image, ("Hand_label: Right"), (5, 50), cv2.FONT_HERSHEY_COMPLEX, my_const.CV2_FONT_SIZE, my_const.GREEN, 2)
+            cv2.putText(
+                image,
+                ("Hand_label: Right"),
+                (5, 50),
+                cv2.FONT_HERSHEY_COMPLEX,
+                my_const.CV2_FONT_SIZE,
+                my_const.GREEN,
+                2,
+            )
         elif count[my_const.LEFT_STRING] > 0 and count[my_const.RIGHT_STRING] == 0:
-            cv2.putText(image, ("Hand_label: Left"), (5, 50), cv2.FONT_HERSHEY_COMPLEX, my_const.CV2_FONT_SIZE, my_const.GREEN, 2)
+            cv2.putText(
+                image,
+                ("Hand_label: Left"),
+                (5, 50),
+                cv2.FONT_HERSHEY_COMPLEX,
+                my_const.CV2_FONT_SIZE,
+                my_const.GREEN,
+                2,
+            )
         else:
-            cv2.putText(image, ("Hand_label: Empty"), (5, 50), cv2.FONT_HERSHEY_COMPLEX, my_const.CV2_FONT_SIZE, my_const.GREEN, 2)
+            cv2.putText(
+                image,
+                ("Hand_label: Empty"),
+                (5, 50),
+                cv2.FONT_HERSHEY_COMPLEX,
+                my_const.CV2_FONT_SIZE,
+                my_const.GREEN,
+                2,
+            )
     hands_gesture = my_const.EMPTY_STRING
-    if count[my_const.RIGHT_STRING] == 1 and fingersStatuses[my_const.RIGHT_INDEX_STRING]:
+    if (
+        count[my_const.RIGHT_STRING] == 1
+        and fingersStatuses[my_const.RIGHT_INDEX_STRING]
+    ):
         isFist = False
         hands_gesture = my_const.RIGHT_POINTER
-    elif count[my_const.LEFT_STRING] == 2 and fingersStatuses["LEFT_MIDDLE"] and fingersStatuses[my_const.LEFT_INDEX_STRING]:
+    elif (
+        count[my_const.LEFT_STRING] == 2
+        and fingersStatuses["LEFT_MIDDLE"]
+        and fingersStatuses[my_const.LEFT_INDEX_STRING]
+    ):
         isFist = False
         hands_gesture = my_const.LEFT_V_SIGN
-    elif count[my_const.RIGHT_STRING] == 3 and fingersStatuses[my_const.RIGHT_THUMB_STRING] and fingersStatuses[my_const.RIGHT_INDEX_STRING] and fingersStatuses[my_const.RIGHT_PINKY_STRING]:
+    elif (
+        count[my_const.RIGHT_STRING] == 3
+        and fingersStatuses[my_const.RIGHT_THUMB_STRING]
+        and fingersStatuses[my_const.RIGHT_INDEX_STRING]
+        and fingersStatuses[my_const.RIGHT_PINKY_STRING]
+    ):
         isFist = False
         hands_gesture = my_const.RIGHT_SPIDERMAN_SIGN
-    elif count[my_const.LEFT_STRING] == 3 and fingersStatuses[my_const.LEFT_THUMB_STRING] and fingersStatuses[my_const.LEFT_INDEX_STRING] and fingersStatuses[my_const.LEFT_PINKY_STRING]:
+    elif (
+        count[my_const.LEFT_STRING] == 3
+        and fingersStatuses[my_const.LEFT_THUMB_STRING]
+        and fingersStatuses[my_const.LEFT_INDEX_STRING]
+        and fingersStatuses[my_const.LEFT_PINKY_STRING]
+    ):
         isFist = False
         hands_gesture = my_const.LEFT_SPIDERMAN_SIGN
     elif handLabel.upper() == my_const.LEFT_STRING and isFist:
@@ -157,8 +238,16 @@ def newRecognizeGestures(mpHands, image, results, draw=True, display=True):
         hands_gesture = my_const.LEFT_OPEN_PALM
     else:
         isFist = False
-        hands_gesture = my_const.EMPTY_STRING
-    cv2.putText(image, ("Hands_gesture: % s" % hands_gesture), (5, 150), cv2.FONT_HERSHEY_COMPLEX, my_const.CV2_FONT_SIZE, my_const.GREEN, 2)
+        hands_gesture = "Unregistered Gesture"
+    cv2.putText(
+        image,
+        ("Hands_gesture: % s" % hands_gesture),
+        (5, 150),
+        cv2.FONT_HERSHEY_COMPLEX,
+        my_const.CV2_FONT_SIZE,
+        my_const.GREEN,
+        2,
+    )
     return hands_gesture
 
 
