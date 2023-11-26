@@ -10,7 +10,7 @@ import utilities as my_utils
 from tkinter import *
 from sys import exit
 
-# doc
+
 # MAKRIS VASILEIOS 5491
 # ttps://mediapipe.readthedocs.io/en/latest/solutions/hands.html
 
@@ -93,9 +93,15 @@ with handsVideos as hands:
                 frame.flags.writeable = True
                 frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
                 if results.multi_hand_landmarks:
-                    detectedLandmarks = my_utils.detectHandsLandmarks(mpDrawing, mpHands, frame, hands)
-                    hand_gesture = my_utils.newRecognizeGestures(mpHands, frame, results, display=False)
-                    my_utils.customLog(my_const.LOG_INFO, "hands_gesture in main: % s" % (hand_gesture))
+                    detectedLandmarks = my_utils.detectHandsLandmarks(
+                        mpDrawing, mpHands, frame, hands
+                    )
+                    hand_gesture = my_utils.newRecognizeGestures(
+                        mpHands, frame, results, display=False
+                    )
+                    my_utils.customLog(
+                        my_const.LOG_INFO, "hands_gesture in main: % s" % (hand_gesture)
+                    )
                     # * BOTH_OPEN_PALM
                     if hand_gesture == my_const.BOTH_OPEN_PALMS:
                         counter[my_const.BOTH_OPEN_PALMS] += 1
@@ -105,7 +111,10 @@ with handsVideos as hands:
                     # * LEFT_SPIDERMAN_SIGN
                     elif hand_gesture == my_const.LEFT_SPIDERMAN_SIGN:
                         counter[my_const.LEFT_SPIDERMAN_SIGN] += 1
-                        if counter[my_const.LEFT_SPIDERMAN_SIGN] == my_const.NUM_OF_FRAMES:
+                        if (
+                            counter[my_const.LEFT_SPIDERMAN_SIGN]
+                            == my_const.NUM_OF_FRAMES
+                        ):
                             with pyautogui.hold("ctrl"):
                                 pyautogui.press(["down"])
                                 pyautogui.press(["down"])
@@ -141,7 +150,10 @@ with handsVideos as hands:
                     # * RIGHT_SPIDERMAN_SIGN
                     elif hand_gesture == my_const.RIGHT_SPIDERMAN_SIGN:
                         counter[my_const.RIGHT_SPIDERMAN_SIGN] += 1
-                        if counter[my_const.RIGHT_SPIDERMAN_SIGN] == my_const.NUM_OF_FRAMES:
+                        if (
+                            counter[my_const.RIGHT_SPIDERMAN_SIGN]
+                            == my_const.NUM_OF_FRAMES
+                        ):
                             with pyautogui.hold("shift"):
                                 pyautogui.press(["left"])
                             counter[my_const.RIGHT_SPIDERMAN_SIGN] = 0
