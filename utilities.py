@@ -94,11 +94,7 @@ def newRecognizeGestures(mpHands, image, results, draw=True, display=True):
     isFist = False
     count = {my_const.RIGHT_STRING: 0, my_const.LEFT_STRING: 0}
     fingersTipsIds = [
-        mpHands.HandLandmark.INDEX_FINGER_TIP,
-        mpHands.HandLandmark.MIDDLE_FINGER_TIP,
-        mpHands.HandLandmark.RING_FINGER_TIP,
-        mpHands.HandLandmark.PINKY_TIP,
-    ]
+        mpHands.HandLandmark.INDEX_FINGER_TIP,    mpHands.HandLandmark.MIDDLE_FINGER_TIP, mpHands.HandLandmark.RING_FINGER_TIP, mpHands.HandLandmark.PINKY_TIP ]
     fingersStatuses = {
         # Right hand
         my_const.RIGHT_THUMB_STRING: False,
@@ -137,95 +133,33 @@ def newRecognizeGestures(mpHands, image, results, draw=True, display=True):
         thumb_tip_x = handLandmarks.landmark[mpHands.HandLandmark.THUMB_TIP].x
         thumb_mcp_x = handLandmarks.landmark[mpHands.HandLandmark.THUMB_TIP - 2].x
         # if the thumb is up
-        if (
-            handLabel.upper() == my_const.RIGHT_STRING and (thumb_tip_x < thumb_mcp_x)
-        ) or (
-            handLabel.upper() == my_const.LEFT_STRING and (thumb_tip_x > thumb_mcp_x)
-        ):
+        if (handLabel.upper() == my_const.RIGHT_STRING and (thumb_tip_x < thumb_mcp_x)) or (handLabel.upper() == my_const.LEFT_STRING and (thumb_tip_x > thumb_mcp_x)):
             # update the status of the thumb in the dictionary to true.
             fingersStatuses[handLabel.upper() + "_THUMB"] = True
             # increase count of the fingers up of the hand by 1.
             count[handLabel.upper()] += 1
-
     if draw:
         # show the total count of the fingers of both hands on the output
-        cv2.putText(
-            image,
-            ("Total Fingers: % s" % str(sum(count.values()))),
-            (5, 25),
-            cv2.FONT_HERSHEY_COMPLEX,
-            my_const.CV2_FONT_SIZE,
-            my_const.GREEN,
-            2,
-        )
+        cv2.putText( image, ("Total Fingers: % s" % str(sum(count.values()))), (5, 25), cv2.FONT_HERSHEY_COMPLEX, my_const.CV2_FONT_SIZE, my_const.GREEN,  2,  )
         if count[my_const.LEFT_STRING] > 0 and count[my_const.RIGHT_STRING] > 0:
-            cv2.putText(
-                image,
-                ("Hand_label: Left & Right"),
-                (5, 50),
-                cv2.FONT_HERSHEY_COMPLEX,
-                my_const.CV2_FONT_SIZE,
-                my_const.GREEN,
-                2,
-            )
+            cv2.putText( image, ("Hand_label: Left & Right"), (5, 50), cv2.FONT_HERSHEY_COMPLEX, my_const.CV2_FONT_SIZE, my_const.GREEN, 2   )
         elif count[my_const.LEFT_STRING] == 0 and count[my_const.RIGHT_STRING] > 0:
-            cv2.putText(
-                image,
-                ("Hand_label: Right"),
-                (5, 50),
-                cv2.FONT_HERSHEY_COMPLEX,
-                my_const.CV2_FONT_SIZE,
-                my_const.GREEN,
-                2,
-            )
+            cv2.putText(image,("Hand_label: Right"),(5, 50),cv2.FONT_HERSHEY_COMPLEX,my_const.CV2_FONT_SIZE,my_const.GREEN,2)
         elif count[my_const.LEFT_STRING] > 0 and count[my_const.RIGHT_STRING] == 0:
-            cv2.putText(
-                image,
-                ("Hand_label: Left"),
-                (5, 50),
-                cv2.FONT_HERSHEY_COMPLEX,
-                my_const.CV2_FONT_SIZE,
-                my_const.GREEN,
-                2,
-            )
+            cv2.putText( image, ("Hand_label: Left"), (5, 50), cv2.FONT_HERSHEY_COMPLEX, my_const.CV2_FONT_SIZE, my_const.GREEN, 2 )
         else:
-            cv2.putText(
-                image,
-                ("Hand_label: Empty"),
-                (5, 50),
-                cv2.FONT_HERSHEY_COMPLEX,
-                my_const.CV2_FONT_SIZE,
-                my_const.GREEN,
-                2,
-            )
+            cv2.putText(image,("Hand_label: Empty"),(5, 50),cv2.FONT_HERSHEY_COMPLEX,my_const.CV2_FONT_SIZE,my_const.GREEN,2)
     hands_gesture = my_const.EMPTY_STRING
-    if (
-        count[my_const.RIGHT_STRING] == 1
-        and fingersStatuses[my_const.RIGHT_INDEX_STRING]
-    ):
+    if (count[my_const.RIGHT_STRING] == 1 and fingersStatuses[my_const.RIGHT_INDEX_STRING]):
         isFist = False
         hands_gesture = my_const.RIGHT_POINTER
-    elif (
-        count[my_const.LEFT_STRING] == 2
-        and fingersStatuses["LEFT_MIDDLE"]
-        and fingersStatuses[my_const.LEFT_INDEX_STRING]
-    ):
+    elif ( count[my_const.LEFT_STRING] == 2 and fingersStatuses["LEFT_MIDDLE"] and fingersStatuses[my_const.LEFT_INDEX_STRING] ):
         isFist = False
         hands_gesture = my_const.LEFT_V_SIGN
-    elif (
-        count[my_const.RIGHT_STRING] == 3
-        and fingersStatuses[my_const.RIGHT_THUMB_STRING]
-        and fingersStatuses[my_const.RIGHT_INDEX_STRING]
-        and fingersStatuses[my_const.RIGHT_PINKY_STRING]
-    ):
+    elif ( count[my_const.RIGHT_STRING] == 3 and fingersStatuses[my_const.RIGHT_THUMB_STRING] and fingersStatuses[my_const.RIGHT_INDEX_STRING] and fingersStatuses[my_const.RIGHT_PINKY_STRING] ):
         isFist = False
         hands_gesture = my_const.RIGHT_SPIDERMAN_SIGN
-    elif (
-        count[my_const.LEFT_STRING] == 3
-        and fingersStatuses[my_const.LEFT_THUMB_STRING]
-        and fingersStatuses[my_const.LEFT_INDEX_STRING]
-        and fingersStatuses[my_const.LEFT_PINKY_STRING]
-    ):
+    elif ( count[my_const.LEFT_STRING] == 3 and fingersStatuses[my_const.LEFT_THUMB_STRING] and fingersStatuses[my_const.LEFT_INDEX_STRING] and fingersStatuses[my_const.LEFT_PINKY_STRING]  ):
         isFist = False
         hands_gesture = my_const.LEFT_SPIDERMAN_SIGN
     elif handLabel.upper() == my_const.LEFT_STRING and isFist:
@@ -239,15 +173,7 @@ def newRecognizeGestures(mpHands, image, results, draw=True, display=True):
     else:
         isFist = False
         hands_gesture = "Unregistered Gesture"
-    cv2.putText(
-        image,
-        ("Hands_gesture: % s" % hands_gesture),
-        (5, 150),
-        cv2.FONT_HERSHEY_COMPLEX,
-        my_const.CV2_FONT_SIZE,
-        my_const.GREEN,
-        2,
-    )
+    cv2.putText(image,("Hands_gesture: % s" % hands_gesture),(5, 150),cv2.FONT_HERSHEY_COMPLEX,my_const.CV2_FONT_SIZE,my_const.GREEN,2)
     return hands_gesture
 
 
