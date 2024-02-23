@@ -16,7 +16,9 @@ The purpose of the program is the remote control of VLC Media Player using user'
 
 5) Run **5491_thesis_1.0_WINDOWS_setup.exe** and install the program
 
-6) Run **5491-thesis** 
+6) Run **5491-thesis**
+
+7) Click on VLC's time bar and start "gesturing"
 
 ## The allowed gestures and their actions:
 
